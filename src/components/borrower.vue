@@ -26,17 +26,23 @@
             </tr>
           </tbody>
         </table>
-        <button
-          class="mt-3 btn btn-info"
-          type="submit"
-          data-toggle="modal"
-          data-target="#modelId"
-        >
-          Request New
-        </button>
+        <div class="w-100 d-flex justify-content-around">
+          <button
+            class="mt-3 btn btn-info"
+            data-toggle="modal"
+            data-target="#modelId"
+            
+          >
+            Request New
+          </button>
+          <button class="mt-3 btn btn-warning" type="button">
+            Back to Login
+          </button>
+        </div>
 
         <!-- Modal -->
         <div
+        
           class="modal fade"
           id="modelId"
           tabindex="-1"
@@ -94,6 +100,7 @@
                   type="button"
                   class="btn btn-secondary"
                   data-dismiss="modal"
+                  ref="closeModal"
                 >
                   Close
                 </button>
@@ -122,7 +129,8 @@ export default {
     return {
       response: [],
       amount: 0,
-      loanName: ""
+      loanName: "",
+      show: false,
     };
   },
   methods: {
@@ -135,10 +143,19 @@ export default {
       axios
         .post(`requestloan`, formData)
         .then(res => {
-          alert('Request sent successfully');
+          alert("Request sent successfully");
+          this.$refs.closeModal.click();
+          // this.show = false;
+          this.update();
           return res.data;
-          })
+        })
         .catch(err => (this.response2 = err));
+    },
+    update() {
+      axios
+        .get(`loans/${this.username}`)
+        .then(res => (this.response = res.data))
+        .catch(error => (this.response = error));
     }
   },
   created() {

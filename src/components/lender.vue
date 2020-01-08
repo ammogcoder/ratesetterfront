@@ -40,6 +40,13 @@
             </tr>
           </tbody>
         </table>
+        <button
+          class="mt-3 btn btn-warning"
+          type="button"
+          @click="location.reload()"
+        >
+          Back to Login
+        </button>
       </div>
     </div>
   </div>
@@ -49,7 +56,7 @@
 import axios from "axios";
 
 export default {
-  props: ['username'],
+  props: ["username"],
   data() {
     return {
       response: [],
@@ -65,10 +72,17 @@ export default {
       axios
         .post(`fundloan`, formData)
         .then(res => {
-          alert('Loan funded successfully}')
+          alert("Loan funded successfully}");
+          this.update();
           return res;
         })
-        .catch(err => this.response2 = err);
+        .catch(err => (this.response2 = err));
+    },
+    update() {
+      axios
+        .get(`loans/${this.username}`)
+        .then(res => (this.response = res.data))
+        .catch(error => (this.response = error));
     }
   },
   created() {
